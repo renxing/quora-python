@@ -25,3 +25,10 @@ def md5(str):
     m = hashlib.md5()
     m.update(str)
     return m.hexdigest()
+
+def format_tags(str):
+    tags = str.split(",")
+    tags = map(lambda tag: tag.strip(), tags)
+    tags = filter(lambda tag: len(tag) > 0, tags)
+    tags = list(set(tags))
+    return tags

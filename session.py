@@ -1,6 +1,7 @@
 
 """ 
 
+from: http://caines.ca/blog/programming/sessions-in-tornado/
 Usage: 
 In your application script,
     settings["session_secret"] = 'some secret password!!'

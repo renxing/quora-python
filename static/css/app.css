@@ -59,6 +59,8 @@ a.page_more  { margin-top:10px; padding:4px 0px; -moz-border-radius: 3px; -webki
 a.page_more:hover { color: #19558D; border-bottom: 1px solid #999; text-decoration: none; }
 a.page_more:active { background: #E0E0E0; border-color: #999; text-shadow: none; }
 
+a.tag { margin:0px 2px; }
+
 .answers { margin:20px 0; }
 .answers .answer { border-bottom:1px solid #DDD; padding:8px 0; }
 .answers .answer .info { color: #999; margin:3px 0;  }

@@ -2,14 +2,15 @@
 
 {% block body %}
 <div id="register" class="form">
+  {{ notice_message }}
   <form action="" method="post">
     <div class="row">
       <label>Email</label><br />
-      <input type="text" name="email" />
+      <input type="text" name="email" value="{{ user.email|e }}" />
     </div>
     <div class="row">
       <label>姓名</label><br />
-      <input type="text" name="name" />
+      <input type="text" name="name"  value="{{ user.name|e }}"/>
     </div>
     <div class="row">
       <label>密码</label><br />

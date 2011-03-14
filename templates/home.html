@@ -5,7 +5,7 @@
   {% for item in asks %}
   <div class="ask">
     <div class="title"><a href="/ask/{{ item.id }}">{{ item.title|e }}</a></div>
-    <div class="info">问题发表与 {{ item.created_at }}, {{ item.answers_count }} 个回答</div>
+    <div class="info">{{ item.user|user_name_tag }} 发布关于 {{ item.tags|tags_name_tag(2) }} 的问题于 {{ item.created_at|strftime }}, {{ item.answers|count }} 个回答</div>
     <div class="body">
       {{ item.body|truncate_lines|md_body }}
     </div>

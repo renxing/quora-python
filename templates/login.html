@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block body %}
 <div id="login" class="form">
+  {{ notice_message }}
   <form action="/login" method="post">
     <div class="row">
       <label>Email:</label><br />
