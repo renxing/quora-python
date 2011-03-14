@@ -1,0 +1,52 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <title>{{ settings['app_name'] }}</title>
+  <link rel="stylesheet" href="/static/css/app.css" type="text/css" />
+   {% block styles %}{% endblock %} 
+   {% block scripts %}{% endblock %} 
+</head>
+<body>
+  <div id="header">
+    <div class="container">
+      <div class="left_wrapper">
+        <div id="site_name">
+          <a href="/">{{ settings['app_name'] }}</a>
+        </div>
+        <div id="add_ask">
+          <input type="text" placeholder="搜索问题, 话题 或 会员" />
+          <a href="/ask">我要提问</a>
+        </div>
+      </div>
+      <div class="sidebar">
+        <div id="user_bar">
+          <a href="/">首页</a>
+          <a href="/{{ current_user.id }}">{{ current_user.name }}</a>
+          <a href="/logout">退出</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="main">
+    <div class="container">
+      <div class="left_wrapper">
+        {% block body %}{% endblock %}
+      </div>
+      <div class="sidebar">
+        {% block sidebar %}{% endblock %}
+      </div>
+    </div>
+  </div>
+  <div id="footer">
+    <div class="container">
+      <div class="left_wrapper">
+        <p class="copyright">
+          &copy; 问天网
+        </p>
+      </div>
+    </div>
+  </div>
+  {% block bottom %}{% endblock %}
+</body>
+</html>

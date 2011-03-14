@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block body %}
+  {% for item in asks %}
+  <div class="ask">
+    <div class="title"><a href="/ask/{{ item.id }}">{{ item.title|e }}</a></div>
+    <div class="info">问题发表与 {{ item.created_at }}, {{ item.answers_count }} 个回答</div>
+    <div class="body">
+      {{ item.body|truncate_lines|markdown }}
+    </div>
+  </div>
+  {% endfor %}
+{% endblock %}
+
+{% block sidebar %}
+<div class="box">
+  <ul>
+    <li><a href="/">Your feed</a></li>
+  </ul>
+</div>
+{% endblock %}

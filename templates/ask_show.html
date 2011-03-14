@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block body %}
+<div class="ask">
+  <h1>{{ ask.title|e }}</h1>
+  <div class="info">问题发表与 {{ ask.created_at }}, {{ ask.answers_count }} 个回答</div>
+  <div class="body">{{ ask.body|markdown }}</div>
+</div>
+{% endblock %}

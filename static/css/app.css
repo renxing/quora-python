@@ -1,0 +1,56 @@
+body {font-family:"Helvetica Neue",Helvetica,Arial,default;font-size:80%;  }
+* {margin:0;padding:0;}
+a {text-decoration:none;}
+a:link,a:visited { color: #19558D; }
+a:hover {text-decoration:underline;}
+img {border:0;}
+input {font-family:Georgia,Helvetica,Arial,default;outline:none;}
+hr {border:0;border-top:1px solid #bcc4d3;}
+h1 {font-size:1.4em;margin:0 0 10px;}
+ul,ol { list-style-position :inside; margin:2px 10px; }
+
+input,textarea { border: 1px solid #999; width: 150px; padding:3px; }
+input.long,textarea.long { width: 700px; }
+textarea.long { height:300px; }
+button { border-color: #062C50; background: #19558D; text-shadow: none; color: white; min-width: 40px; cursor: pointer;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  font-weight: bold; font-size: .9em; display: inline-block; padding: 3px 10px; text-align: center; }
+body { text-align:center; }
+.container { width:1260px; margin:0 auto; text-align:left; }
+#header {
+  background: #505759;
+  min-height: 35px;
+  padding-top: 18px;
+  color:#FFF;
+}
+#header #site_name { background:#a82400; color:#FFF; height:35px; width:68px; text-align:center; line-height:35px;  float:left;
+  font-size:20px; font-weight:bold;  }
+#header #site_name a { color:#FFF; text-decoration:none; }
+#header #add_ask { display:inline-block; background:#000; height:35px; line-height:35px; padding:0 6px; overflow:hidden; }
+#header #add_ask input { width:360px; font-size: 16px;height: 18px; line-height:18px; border:0; margin-top: 2px; }
+#header #add_ask a { color: #F0F0F0; font-weight: bold; font-size: 13px; padding: 10px 10px; text-align: center;}
+
+#header #user_bar { padding-top:10px; }
+#header #user_bar a { color: #B9BBBC; font-weight:bold; font-size:13px; display:inline-block; margin-right:8px; }
+#footer { clear:both; padding-top:25px; height:80px; }
+
+#main { margin:20px 0; }
+.left_wrapper { float:left; width:870px; }
+#footer .left_wrapper ,
+#main .left_wrapper { margin-left:70px; width:800px; }
+.sidebar { float:right: width:450px; }
+
+.form { }
+.form .row { margin:5px 0; }
+.form .row label { font-size: 12px; color:#666; }
+
+.ask { margin-bottom:15px; }
+.ask h1 { font-size: 1.8em; line-height: 1.3em; letter-spacing: -1px; margin-bottom: 0; }
+.ask .title { font-size: 1.3em; line-height: 1.2em; font-weight: bold;}
+.ask .info { color: #999; margin:3px 0;  }
+.ask .body { font-size:1.2em; color: #333; line-height:130%; }
+.ask .body blockquote { padding-left:28px; padding-top:8px; background:#FAEBBC url(/static/img/lquote.gif) left top no-repeat; }
+.ask .body blockquote p { padding-right:28px; padding-bottom:8px; font-size:1em; background:url(/static/img/rquote.gif) bottom right no-repeat; }
+
+#login { margin: 20px 0; }
