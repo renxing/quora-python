@@ -45,7 +45,7 @@ body { text-align:center; }
 .form .row { margin:5px 0; }
 .form .row label { font-size: 12px; color:#666; }
 
-.ask { margin-bottom:15px; }
+.ask { margin-bottom:15px; border-bottom:1px solid #ddd; padding-bottom:10px; }
 .ask h1 { font-size: 1.8em; line-height: 1.3em; letter-spacing: -1px; margin-bottom: 0; }
 .ask .title { font-size: 1.3em; line-height: 1.2em; font-weight: bold;}
 .ask .info { color: #999; margin:3px 0;  }
@@ -53,9 +53,14 @@ body { text-align:center; }
 .md_body blockquote { padding-left:28px; padding-top:8px; background:#FAEBBC url(/static/img/lquote.gif) left top no-repeat; }
 .md_body blockquote p { padding-right:28px; padding-bottom:8px; font-size:1em; background:url(/static/img/rquote.gif) bottom right no-repeat; }
 .md_body a { background:url(/static/img/link_out.gif) 4px right no-repeat; padding-right:10px; }
+a.page_more  { margin-top:10px; padding:4px 0px; -moz-border-radius: 3px; -webkit-border-radius: 3px; 
+  display:block; text-align:center; font-weight: bold; cursor: pointer; color:#333;
+  background:#ddd url(/static/img/more_bg.gif); border: 1px solid #bbb; font-size: .9em; }
+a.page_more:hover { color: #19558D; border-bottom: 1px solid #999; text-decoration: none; }
+a.page_more:active { background: #E0E0E0; border-color: #999; text-shadow: none; }
 
 .answers { margin:20px 0; }
-.answers .answer { border-top:1px solid #DDD; padding:8px 0; }
+.answers .answer { border-bottom:1px solid #DDD; padding:8px 0; }
 .answers .answer .info { color: #999; margin:3px 0;  }
 
 #login { margin: 20px 0; }

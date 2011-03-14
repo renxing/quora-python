@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% block body %}
+<div id="asks">
   {% for item in asks %}
   <div class="ask">
     <div class="title"><a href="/ask/{{ item.id }}">{{ item.title|e }}</a></div>
@@ -10,7 +11,12 @@
     </div>
   </div>
   {% endfor %}
+  {% if asks|length == 10 %}
+  <a class="page_more" href="/?last={{ asks[-1].id }}">查看更多...</a>
+  {% endif %}
+</div>
 {% endblock %}
+
 
 {% block sidebar %}
 <div class="box">

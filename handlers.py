@@ -51,7 +51,11 @@ class BaseHandler(tornado.web.RequestHandler):
 
 class HomeHandler(BaseHandler):
     def get(self):
-        asks = self.db.query("select * from asks order by id desc limit 10")
+        last_id = self.get_argument("last", None)
+        if not last_id:
+          asks = self.db.query("select * from asks order by id desc limit 10")
+        else:
+          asks = self.db.query("select * from asks where id < %s order by id desc limit 10", last_id)
         if not asks:
             self.redirect("/ask")
         else:
