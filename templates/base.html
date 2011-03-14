@@ -22,8 +22,13 @@
       <div class="sidebar">
         <div id="user_bar">
           <a href="/">首页</a>
+          {% if not current_user %}
+          <a href="/login">登陆</a>
+          <a href="/register">注册</a>
+          {% else %}
           <a href="/{{ current_user.id }}">{{ current_user.name }}</a>
           <a href="/logout">退出</a>
+          {% endif %}
         </div>
       </div>
     </div>

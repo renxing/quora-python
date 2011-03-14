@@ -11,6 +11,7 @@ class BaseHandler(tornado.web.RequestHandler):
     def render(self,template,**args):
         env = Environment(loader=FileSystemLoader(self.settings['template_path']))
         env.filters['markdown'] = filter.markdown
+        env.filters['md_body'] = filter.md_body
         env.filters['truncate_lines'] = utils.truncate_lines
         template = env.get_template(template)
         self.finish(template.render(settings=self.settings,
@@ -76,15 +77,26 @@ class AskHandler(BaseHandler):
 class AskShowHandler(BaseHandler):
     def get(self,id):
         ask = self.db.get("select * from asks where id = %d" % int(id))
+        answers = self.db.query("select * from answers where ask_id = %s" % id)
         if not ask:
             render_404
-        self.render("ask_show.html",ask=ask)
+        self.render("ask_show.html",ask=ask, answers=answers)
 
-
+class AnswerHandler(BaseHandler):
+    def get(self,ask_id):
+        self.redirect("/ask/%s" % ask_id)
+    @tornado.web.authenticated
+    def post(self,ask_id):
+        body = self.get_argument("body",None)
+        id = self.db.execute("INSERT INTO answers (ask_id,body,user_id,created_at)  values(%s,%s,%s,UTC_TIMESTAMP())",
+                        ask_id,body,self.current_user.id)
+        self.db.execute("UPDATE asks set answers_count = answers_count + 1 where id = %s", ask_id)
+        self.redirect("/ask/%s" % ask_id)
 
 class LogoutHandler(BaseHandler):
     def get(self):
-        self.render("login.html")
+        self.set_secure_cookie("user_id","")
+        self.redirect("/login")
 
 class LoginHandler(BaseHandler):
     def get(self):
@@ -92,7 +104,7 @@ class LoginHandler(BaseHandler):
 
     def post(self):
         email = self.get_argument("email",None)
-        password = self.get_argument("password",None)
+        password = utils.md5(self.get_argument("password",None))
         user = self.db.get("select * from users where email = %s and password = %s", email, password)
         if not user:
             self.notice("Email or Password error.",'error')
@@ -100,6 +112,23 @@ class LoginHandler(BaseHandler):
         else:
             self.set_secure_cookie("user_id", str(user.id))
             self.redirect(self.get_argument("next","/"))
+
+class RegisterHandler(BaseHandler):
+    def get(self):
+       self.render("register.html")
+
+    def post(self):
+        email = self.get_argument("email",None)
+        password = self.get_argument("password",None)
+        password = utils.md5(password)
+        name = self.get_argument("name",None)
+
+        id = self.db.execute("INSERT INTO users (name,email,password,created_at) values(%s,%s,%s,UTC_TIMESTAMP())",
+                    name,email,password)
+        self.set_secure_cookie("user_id",str(id))
+        self.redirect("/")
+
+        
 
 class FeedHandler(BaseHandler):
     def get(self):

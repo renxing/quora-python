@@ -1,8 +1,45 @@
 {% extends "base.html" %}
+{% block styles %}
+<link rel="stylesheet" type="text/css" href="/static/css/wmd.css"/>
+{% endblock %}
+{% block scripts %}
+<script type="text/javascript" src="/static/js/wmd.js"></script>
+<script type="text/javascript" src="/static/js/showdown.js"></script>
+{% endblock %}
 {% block body %}
 <div class="ask">
   <h1>{{ ask.title|e }}</h1>
   <div class="info">问题发表与 {{ ask.created_at }}, {{ ask.answers_count }} 个回答</div>
-  <div class="body">{{ ask.body|markdown }}</div>
+  <div class="md_body">{{ ask.body|md_body }}</div>
+</div>
+<div class="answers">
+  {% for item in answers %}
+  <div class="answer">
+    <div class="info">回复与 {{ item.created_at }}</div>
+    <div class="md_body">{{ item.body|md_body }}</div>
+  </div>
+  {% endfor %}
+</div>
+<div class="ask from">
+  <h2>回答</h2>
+  <form action="/ask/{{ ask.id }}/answer" method="post">
+    <div class="row">
+      <div id="answer_body_buttons"></div>
+      <textarea id="answer_body" name="body" style="height:100px;" class="text long"></textarea><br />
+      <div id="answer_body_preview" class="md_body"></div>
+      <script type="text/javascript">
+        setup_wmd({
+          input: "answer_body",
+          button_bar: "answer_body_buttons",
+          preview: "answer_body_preview",
+          output: "copy_html"
+        });
+      </script>
+    </div>
+    <div class="actions">
+      <button type="submit">提交回答</button>
+    </div>
+    {{ xsrf_form_html() }}
+  </form>
 </div>
 {% endblock %}

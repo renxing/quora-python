@@ -19,7 +19,7 @@ def markdown_tag(str):
     return markdown.markdown(str)
 
 define("port", default=8888, help="run on the given port", type=int)
-define("mysql_host", default="172.28.150.23:3306", help="blog database host")
+define("mysql_host", default="127.0.0.1:3306", help="blog database host")
 define("mysql_database", default="wenda", help="blog database name")
 define("mysql_user", default="monster", help="blog database user")
 define("mysql_password", default="123123", help="blog database password")
@@ -30,8 +30,10 @@ class Application(tornado.web.Application):
             (r"/", HomeHandler),
             (r"/feed", FeedHandler),
             (r"/ask/([^/]+)", AskShowHandler),
+            (r"/ask/([^/]+)/answer", AnswerHandler),
             (r"/ask", AskHandler),
             (r"/login", LoginHandler),
+            (r"/register", RegisterHandler),
             (r"/logout", LogoutHandler),
         ]
         settings = dict(

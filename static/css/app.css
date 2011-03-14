@@ -4,12 +4,12 @@ a {text-decoration:none;}
 a:link,a:visited { color: #19558D; }
 a:hover {text-decoration:underline;}
 img {border:0;}
-input {font-family:Georgia,Helvetica,Arial,default;outline:none;}
+input {font-family:Helvetica,Arial,default;outline:none;}
 hr {border:0;border-top:1px solid #bcc4d3;}
 h1 {font-size:1.4em;margin:0 0 10px;}
 ul,ol { list-style-position :inside; margin:2px 10px; }
 
-input,textarea { border: 1px solid #999; width: 150px; padding:3px; }
+input,textarea { border: 1px solid #999; width: 250px; padding:3px; }
 input.long,textarea.long { width: 700px; }
 textarea.long { height:300px; }
 button { border-color: #062C50; background: #19558D; text-shadow: none; color: white; min-width: 40px; cursor: pointer;
@@ -49,8 +49,13 @@ body { text-align:center; }
 .ask h1 { font-size: 1.8em; line-height: 1.3em; letter-spacing: -1px; margin-bottom: 0; }
 .ask .title { font-size: 1.3em; line-height: 1.2em; font-weight: bold;}
 .ask .info { color: #999; margin:3px 0;  }
-.ask .body { font-size:1.2em; color: #333; line-height:130%; }
-.ask .body blockquote { padding-left:28px; padding-top:8px; background:#FAEBBC url(/static/img/lquote.gif) left top no-repeat; }
-.ask .body blockquote p { padding-right:28px; padding-bottom:8px; font-size:1em; background:url(/static/img/rquote.gif) bottom right no-repeat; }
+.md_body { font-size:1.2em; color: #333; line-height:130%; }
+.md_body blockquote { padding-left:28px; padding-top:8px; background:#FAEBBC url(/static/img/lquote.gif) left top no-repeat; }
+.md_body blockquote p { padding-right:28px; padding-bottom:8px; font-size:1em; background:url(/static/img/rquote.gif) bottom right no-repeat; }
+.md_body a { background:url(/static/img/link_out.gif) 4px right no-repeat; padding-right:10px; }
+
+.answers { margin:20px 0; }
+.answers .answer { border-top:1px solid #DDD; padding:8px 0; }
+.answers .answer .info { color: #999; margin:3px 0;  }
 
 #login { margin: 20px 0; }

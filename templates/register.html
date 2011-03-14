@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block body %}
+<div id="register" class="form">
+  <form action="" method="post">
+    <div class="row">
+      <label>Email</label><br />
+      <input type="text" name="email" />
+    </div>
+    <div class="row">
+      <label>姓名</label><br />
+      <input type="text" name="name" />
+    </div>
+    <div class="row">
+      <label>密码</label><br />
+      <input type="password" name="password" />
+    </div>
+    <div class="row">
+      <button type="submit">注册</button>
+    </div>
+    {{ xsrf_form_html() }}
+  </form>
+</div>
+{% endblock %}

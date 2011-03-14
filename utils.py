@@ -1,4 +1,5 @@
 # coding: utf-8
+import hashlib
 def truncate_lines(body, lines = 4, max_chars = 400):
     if not body: return ""
     body_lines = body.splitlines()
@@ -19,3 +20,8 @@ def _truncate_lines(body_lines, lines, summary, max_chars):
             return summary
     else:
         return summary
+
+def md5(str):
+    m = hashlib.md5()
+    m.update(str)
+    return m.hexdigest()
