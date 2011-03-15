@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 {% block styles %}
-<link rel="stylesheet" type="text/css" href="/static/css/wmd.css"/>
+<link rel="stylesheet" type="text/css" href="{{ static_url("css/wmd.css") }}"/>
 {% endblock %}
 {% block scripts %}
-<script type="text/javascript" src="/static/js/wmd.js"></script>
-<script type="text/javascript" src="/static/js/showdown.js"></script>
+<script type="text/javascript" src="{{ static_url("js/wmd.js") }}"></script>
+<script type="text/javascript" src="{{ static_url("js/showdown.js") }}"></script>
 {% endblock %}
 {% block body %}
 <div class="ask">
@@ -12,6 +12,30 @@
   <div class="info">{{ ask.user|user_name_tag }} 发布关于 {{ ask.tags|tags_name_tag }} 的问题于 
     {{ ask.created_at|strftime }}, {{ ask.answers|count }} 个回答</div>
   <div class="md_body">{{ ask.body|md_body }}</div>
+  <div class="action">
+    {% if ask.comments|count == 0 %}
+    <a href="#">给予评论</a>
+    {% else %}
+    <a href="#">{{ ask.comments|count }} 条评论</a>
+    {% endif %}
+    • <a href="#">收藏</a>
+  </div>
+  <div class="comments">
+    {% for item in ask.comments %}
+    <div class="comment">
+      <div class="md_body">{{ item.body|md_body }}</div>
+      <div class="info">{{ item.user|user_name_tag }} • {{ item.created_at|strftime('short') }}</div>
+    </div>
+    {% endfor %}
+    <div class="comment form">
+      <form action="/ask/{{ ask.id }}" method="post">
+        {{ xsrf_form_html() }}
+        <input type="hidden" name="_method" value="comment" />
+        <textarea type="text" name="body"></textarea>
+        <button type="submit">评论</button>
+      </form>
+    </div>
+  </div>
 </div>
 <div class="answers">
   {% for item in ask.answers %}

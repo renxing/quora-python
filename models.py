@@ -6,12 +6,18 @@ class User(Document):
     email = EmailField(required=True,unique=True)
     name = StringField(required=True,min_length=2)
     password = StringField(required=True)
-    blog = StringField()
+    blog = URLField()
+    created_at = DateTimeField(default=datetime.datetime.now)
+
+class Comment(EmbeddedDocument):
+    body = StringField(required=True,min_length=4, max_length=2000)
+    user = ReferenceField(User)
     created_at = DateTimeField(default=datetime.datetime.now)
     
 class Answer(EmbeddedDocument):
     body = StringField()
     user = ReferenceField(User)
+    comments = ListField(EmbeddedDocumentField(Comment))
     created_at = DateTimeField(default=datetime.datetime.now)
 
 class Ask(Document):
@@ -21,6 +27,7 @@ class Ask(Document):
     user = ReferenceField(User)
     tags = ListField(StringField(max_length=30))
     answers = ListField(EmbeddedDocumentField(Answer))
+    comments = ListField(EmbeddedDocumentField(Comment))
     created_at = DateTimeField(default=datetime.datetime.now)
     replied_at = DateTimeField(default=datetime.datetime.now)
 

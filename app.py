@@ -26,13 +26,13 @@ class Application(tornado.web.Application):
     def __init__(self):
         handlers = [
             (r"/", HomeHandler),
-            (r"/feed", FeedHandler),
-            (r"/ask/([^/]+)", AskShowHandler),
-            (r"/ask/([^/]+)/answer", AnswerHandler),
-            (r"/ask", AskHandler),
             (r"/login", LoginHandler),
             (r"/register", RegisterHandler),
             (r"/logout", LogoutHandler),
+            (r"/ask/([^/]+)", AskShowHandler),
+            (r"/feed", FeedHandler),
+            (r"/ask/([^/]+)/answer", AnswerHandler),
+            (r"/ask", AskHandler),
         ]
         settings = dict(
             app_name=u"Quora",

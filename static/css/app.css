@@ -49,9 +49,11 @@ body { text-align:center; }
 .ask h1 { font-size: 1.8em; line-height: 1.3em; letter-spacing: -1px; margin-bottom: 0; }
 .ask .title { font-size: 1.3em; line-height: 1.2em; font-weight: bold;}
 .ask .info { color: #999; margin:3px 0;  }
+.ask .action { color:#999; margin:3px 0; }
 .md_body { font-size:1.2em; color: #333; line-height:130%; }
 .md_body blockquote { padding-left:28px; padding-top:8px; background:#FAEBBC url(/static/img/lquote.gif) left top no-repeat; }
 .md_body blockquote p { padding-right:28px; padding-bottom:8px; font-size:1em; background:url(/static/img/rquote.gif) bottom right no-repeat; }
+.md_body code { background: #F4F4F4; display:block; margin:5px; padding:2px; font-size:.6em; font-family:monaco,monospace; line-height:120%; }
 .md_body a { background:url(/static/img/link_out.gif) 4px right no-repeat; padding-right:10px; }
 a.page_more  { margin-top:10px; padding:4px 0px; -moz-border-radius: 3px; -webkit-border-radius: 3px; 
   display:block; text-align:center; font-weight: bold; cursor: pointer; color:#333;
@@ -62,7 +64,15 @@ a.page_more:active { background: #E0E0E0; border-color: #999; text-shadow: none;
 a.tag { margin:0px 2px; }
 
 .answers { margin:20px 0; }
-.answers .answer { border-bottom:1px solid #DDD; padding:8px 0; }
+.answers .answer { border-bottom:1px solid #DDD; padding:8px 0; margin-bottom:3px; }
 .answers .answer .info { color: #999; margin:3px 0;  }
+
+.comments { margin-top:10px; }
+.comments h2 { font-size:1em; color:#333; }
+.comments .comment { padding-left:15px; margin-top:8px; background:url(/static/img/comment_bg.gif) left top no-repeat; }
+.comments .comment .md_body { font-size:80%; }
+.comments .comment .info {font-size: .9em;}
+.comments .form { height: 50px; }
+.comments .form textarea { float:left; height: 30px; width:300px; margin-right:6px;  }
 
 #login { margin: 20px 0; }

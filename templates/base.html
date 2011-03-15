@@ -3,8 +3,9 @@
 <head>
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <title>{{ settings['app_name'] }}</title>
-  <link rel="stylesheet" href="/static/css/app.css" type="text/css" />
+  <link rel="stylesheet" href="{{ static_url("css/app.css") }}" type="text/css" />
    {% block styles %}{% endblock %} 
+   <script type="text/javascript" src="{{ static_url("js/jquery.js") }}"></script>
    {% block scripts %}{% endblock %} 
 </head>
 <body>

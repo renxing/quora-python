@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 {% block styles %}
-<link rel="stylesheet" type="text/css" href="/static/css/wmd.css"/>
+<link rel="stylesheet" type="text/css" href="{{ static_url("css/wmd.css") }}"/>
 {% endblock %}
 {% block scripts %}
-<script type="text/javascript" src="/static/js/wmd.js"></script>
-<script type="text/javascript" src="/static/js/showdown.js"></script>
+<script type="text/javascript" src="{{ static_url("js/wmd.js") }}"></script>
+<script type="text/javascript" src="{{ static_url("js/showdown.js") }}"></script>
 {% endblock %}
 {% block body %}
 <div class="ask form">

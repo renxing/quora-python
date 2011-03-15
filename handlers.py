@@ -1,11 +1,12 @@
 # coding: utf-8
+import sys
 import tornado.web
 import tornado.auth
 from jinja2 import Template, Environment, FileSystemLoader
-import filter, utils, session
 from pymongo.objectid import ObjectId
+
+import filter, utils, session
 from models import *
-import sys
 
 class BaseHandler(tornado.web.RequestHandler):
 
@@ -26,6 +27,7 @@ class BaseHandler(tornado.web.RequestHandler):
         self.finish(template.render(settings=self.settings,
                         notice_message=self.notice_message,
                         current_user=self.current_user,
+                        static_url=self.static_url,
                         xsrf_form_html=self.xsrf_form_html,
                         **args))
 
@@ -104,6 +106,25 @@ class AskShowHandler(BaseHandler):
             render_404
         self.render("ask_show.html",ask=ask)
 
+    def post(self,id):
+        ask = Ask.objects(id=id).first()
+        if not ask:
+            render_404
+
+        method = self.get_argument("_method")
+        if method == "comment":
+            # 评论
+            comment = Comment(body=self.get_argument("body",None),
+                              user=self.current_user)
+            ask.comments.append(comment)
+            try:
+                ask.save()
+                self.redirect("/ask/%s" % ask.id)
+            except Exception,exc:
+                self.notice(exc,"error")
+                self.redirect("/ask/%s" % ask.id)
+
+
 class AnswerHandler(BaseHandler):
     def get(self,ask_id):
         self.redirect("/ask/%s" % ask_id)
@@ -162,3 +183,5 @@ class RegisterHandler(BaseHandler):
 class FeedHandler(BaseHandler):
     def get(self):
         self.render("feed.html")
+
+
