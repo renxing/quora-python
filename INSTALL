@@ -1,6 +1,2 @@
-curl -O http://sourceforge.net/projects/mysql-python/files/mysql-python/1.2.3/MySQL-python-1.2.3.tar.gz/download
-tar zxf MySQL-python-1.2.3.tar.gz
-cd MySQL-python-1.2.3
-sudo python setup.py install
-
 sudo easy_install Jinja2
+sudo easy_install mongoengine
