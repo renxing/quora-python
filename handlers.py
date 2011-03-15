@@ -28,6 +28,7 @@ class BaseHandler(tornado.web.RequestHandler):
                         notice_message=self.notice_message,
                         current_user=self.current_user,
                         static_url=self.static_url,
+                        modules=self.ui['modules'],
                         xsrf_form_html=self.xsrf_form_html,
                         **args))
 
@@ -183,5 +184,4 @@ class RegisterHandler(BaseHandler):
 class FeedHandler(BaseHandler):
     def get(self):
         self.render("feed.html")
-
 

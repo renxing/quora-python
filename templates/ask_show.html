@@ -5,7 +5,21 @@
 {% block scripts %}
 <script type="text/javascript" src="{{ static_url("js/wmd.js") }}"></script>
 <script type="text/javascript" src="{{ static_url("js/showdown.js") }}"></script>
+<script type="text/javascript">
+  function toggleAskComments(){
+    var ask_comments = $("#ask_{{ask.id}}_comments");
+    ask_comments.toggle();
+    return false;
+  }
+
+  function toggleAnswerComments(id){
+    var answer_comments = $("#answer_"+id+"_comments");
+    answer_comments.toggle();
+    return false;
+  }
+</script>
 {% endblock %}
+{% from "_comments.html" import comments_render %}
 {% block body %}
 <div class="ask">
   <h1>{{ ask.title|e }}</h1>
@@ -14,34 +28,28 @@
   <div class="md_body">{{ ask.body|md_body }}</div>
   <div class="action">
     {% if ask.comments|count == 0 %}
-    <a href="#">给予评论</a>
+    <a href="#" onclick="return toggleAskComments();">给予评论</a>
     {% else %}
-    <a href="#">{{ ask.comments|count }} 条评论</a>
+    <a href="#" onclick="return toggleAskComments();">{{ ask.comments|count }} 条评论</a>
     {% endif %}
     • <a href="#">收藏</a>
   </div>
-  <div class="comments">
-    {% for item in ask.comments %}
-    <div class="comment">
-      <div class="md_body">{{ item.body|md_body }}</div>
-      <div class="info">{{ item.user|user_name_tag }} • {{ item.created_at|strftime('short') }}</div>
-    </div>
-    {% endfor %}
-    <div class="comment form">
-      <form action="/ask/{{ ask.id }}" method="post">
-        {{ xsrf_form_html() }}
-        <input type="hidden" name="_method" value="comment" />
-        <textarea type="text" name="body"></textarea>
-        <button type="submit">评论</button>
-      </form>
-    </div>
-  </div>
+  {{ comments_render("ask",ask,xsrf_form_html) }}
 </div>
 <div class="answers">
   {% for item in ask.answers %}
   <div class="answer">
     <div class="info">{{ item.user|user_name_tag }} 回复与 {{ item.created_at|strftime }}</div>
     <div class="md_body">{{ item.body|md_body }}</div>
+    <div class="action">
+      {% if item.comments|count == 0 %}
+      <a href="#" onclick="return toggleAnswerComments({{ item.id }});">给予评论</a>
+      {% else %}
+      <a href="#" onclick="return toggleAnswerComments({{ item.key }});">{{ item.comments|count }} 条评论</a>
+      {% endif %}
+      • <a href="#">收藏</a>
+    </div>
+    {{ comments_render("answer",item,xsrf_form_html) }}
   </div>
   {% endfor %}
 </div>
