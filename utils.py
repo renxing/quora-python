@@ -27,6 +27,7 @@ def md5(str):
     return m.hexdigest()
 
 def format_tags(str):
+    str = str.replace(u"，",",")
     tags = str.split(",")
     tags = map(lambda tag: tag.strip(), tags)
     tags = filter(lambda tag: len(tag) > 0, tags)
