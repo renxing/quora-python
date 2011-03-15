@@ -22,5 +22,7 @@ class Ask(Document):
     tags = ListField(StringField(max_length=30))
     answers = ListField(EmbeddedDocumentField(Answer))
     created_at = DateTimeField(default=datetime.datetime.now)
+    replied_at = DateTimeField(default=datetime.datetime.now)
+
 
 

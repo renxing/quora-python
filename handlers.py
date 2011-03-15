@@ -66,9 +66,9 @@ class HomeHandler(BaseHandler):
     def get(self):
         last_id = self.get_argument("last", None)
         if not last_id:
-          asks = Ask.objects.order_by("-id").limit(10)
+          asks = Ask.objects.order_by("-replied_at").limit(10)
         else:
-          asks = Ask.order_by("-id").objects(id_lt = last_id).limit(10)
+          asks = Ask.order_by("-replied_at").objects(id_lt = last_id).limit(10)
         if not asks:
             self.redirect("/ask")
         else:
@@ -113,6 +113,7 @@ class AnswerHandler(BaseHandler):
         ask = Ask.objects(id=ask_id).first()
         answer = Answer(body=self.get_argument("body",None),
                         user=self.current_user)
+        ask.replied_at = answer.created_at
         ask.answers.append(answer)
         try:
           ask.save()
