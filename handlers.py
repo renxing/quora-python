@@ -176,8 +176,10 @@ class CommentHandler(BaseHandler):
                           user=self.current_user)
         if commentable_type == "ask":
             Ask.objects(id=commentable_id).update_one(push__comments=comment)            
-            comment_hash = { "success":1,
-                    "user_id":str(self.current_user.id),
-                    "name":self.current_user.name }
-            self.write(tornado.escape.json_encode(comment_hash))
+        elif commentable_type == "answer":
+            Ask.objects(answers__id=commentable_id).update_one(push__comments=comment) 
+        comment_hash = { "success":1,
+                "user_id":str(self.current_user.id),
+                "name":self.current_user.name }
+        self.write(tornado.escape.json_encode(comment_hash))
 

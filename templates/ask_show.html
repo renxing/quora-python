@@ -17,6 +17,38 @@
     answer_comments.slideToggle(200);
     return false;
   }
+
+  function submitComment(el){
+    frm = $(el);
+    action_url = frm.attr("action");
+    input_body = $(".body",frm);
+    body = input_body.val();
+    if(body.length < 1){
+      input_body.focus();
+      return false;
+    }
+
+    $.ajax({
+      type : "post",
+      url : action_url,
+      data : frm.serialize(),
+      dataType : "json",
+      success : function(item){ 
+        if(item.success == 1){
+          html = '<div style="display:none;" class="comment"><div class="md_body">'+body+'</div>';
+          html += '<div class="info"><a href="/user/'+item.user_id+'">'+item.name+'</a></div>';
+          var new_comment = $(html);
+          frm.parent().before(new_comment);
+          new_comment.fadeIn(200);
+          $(".body",frm).val("").focus();
+        }
+        else{
+          alert("异常，评论失败。");
+        }
+      }
+    });
+    return false;
+  }
 </script>
 {% endblock %}
 {% from "_comments.html" import comments_render %}

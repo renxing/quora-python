@@ -7,41 +7,7 @@
   </div>
   {% endfor %}
   <div class="comment form">
-    <script type="text/javascript" charset="utf-8">
-      function submitComment(el){
-        frm = $(el);
-        input_body = $(".body",frm);
-        body = input_body.val();
-        if(body.length < 1){
-          input_body.focus();
-          return false;
-        }
-
-        $.ajax({
-          type : "post",
-          url : "/comment/{{ type }}/{{ model.id }}",
-          data : frm.serialize(),
-          dataType : "json",
-          success : function(item){ 
-            if(item.success == 1){
-              html = '<div style="display:none;" class="comment"><div class="md_body">'+body+'</div>';
-              html += '<div class="info"><a href="/user/'+item.user_id+'">'+item.name+'</a></div>';
-              var new_comment = $(html);
-              frm.parent().before(new_comment);
-              new_comment.fadeIn(200);
-              $(".body",frm).val("").focus();
-            }
-            else{
-              alert("异常，评论失败。");
-            }
-          }
-        });
-        return false;
-      }
-    </script>
-    {% if type == "ask" %}
     <form action="/comment/{{ type }}/{{ model.id }}" onsubmit="return submitComment(this);" method="post">
-    {% endif %}
       {{ xsrf_form_html() }}
       <textarea type="text" class="body" name="body"></textarea>
       <button type="submit">评论</button>
