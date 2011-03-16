@@ -69,7 +69,7 @@
   {{ comments_render("ask",ask,xsrf_form_html) }}
 </div>
 <div class="answers">
-  {% for item in ask.answers %}
+  {% for item in answers %}
   <div class="answer">
     <div class="info">{{ item.user|user_name_tag }} 回复与 {{ item.created_at|strftime }}</div>
     <div class="md_body">{{ item.body|md_body }}</div>
@@ -77,7 +77,7 @@
       {% if item.comments|count == 0 %}
       <a href="#" onclick="return toggleAnswerComments('{{ item.id }}');">给予评论</a>
       {% else %}
-      <a href="#" onclick="return toggleAnswerComments('{{ item.key }}');">{{ item.comments|count }} 条评论</a>
+      <a href="#" onclick="return toggleAnswerComments('{{ item.id }}');">{{ item.comments|count }} 条评论</a>
       {% endif %}
       • <a href="#">有用</a> • <a href="#">没有帮助</a>
     </div>
