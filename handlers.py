@@ -107,24 +107,6 @@ class AskShowHandler(BaseHandler):
             render_404
         self.render("ask_show.html",ask=ask)
 
-    def post(self,id):
-        ask = Ask.objects(id=id).first()
-        if not ask:
-            render_404
-
-        method = self.get_argument("_method")
-        if method == "comment":
-            # 评论
-            comment = Comment(body=self.get_argument("body",None),
-                              user=self.current_user)
-            ask.comments.append(comment)
-            try:
-                ask.save()
-                self.redirect("/ask/%s" % ask.id)
-            except Exception,exc:
-                self.notice(exc,"error")
-                self.redirect("/ask/%s" % ask.id)
-
 
 class AnswerHandler(BaseHandler):
     def get(self,ask_id):
@@ -132,17 +114,16 @@ class AnswerHandler(BaseHandler):
 
     @tornado.web.authenticated
     def post(self,ask_id):
-        ask = Ask.objects(id=ask_id).first()
-        answer = Answer(body=self.get_argument("body",None),
+        answer = Answer(id=utils.sid(),
+                        body=self.get_argument("body",None),
                         user=self.current_user)
-        ask.replied_at = answer.created_at
-        ask.answers.append(answer)
         try:
-          ask.save()
-          self.redirect("/ask/%s" % ask.id)
+            Ask.objects(id=ask_id).update_one(set__replied_at=answer.created_at)
+            Ask.objects(id=ask_id).update_one(push__answers=answer)
+            self.redirect("/ask/%s" % ask_id)
         except Exception,exc:
-          self.notice(exc,"error")
-          self.render("ask_show.html",ask=ask)
+            self.notice(exc,"error")
+            self.render("ask_show.html",ask=ask)
 
 class LogoutHandler(BaseHandler):
     def get(self):
@@ -184,4 +165,19 @@ class RegisterHandler(BaseHandler):
 class FeedHandler(BaseHandler):
     def get(self):
         self.render("feed.html")
+
+
+class CommentHandler(BaseHandler):
+    def post(self, commentable_type, commentable_id):
+        commentable_type = commentable_type.lower()
+        if ["ask","answer"].count(commentable_type) == 0: return ""
+        comment = Comment(id=utils.sid(),
+                          body=self.get_argument("body",None),
+                          user=self.current_user)
+        if commentable_type == "ask":
+            Ask.objects(id=commentable_id).update_one(push__comments=comment)            
+            comment_hash = { "success":1,
+                    "user_id":str(self.current_user.id),
+                    "name":self.current_user.name }
+            self.write(tornado.escape.json_encode(comment_hash))
 

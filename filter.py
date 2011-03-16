@@ -20,7 +20,7 @@ def tags_name_tag(tags,limit = 0):
     return ",".join(html)
 
 def user_name_tag(user):
-    return '<a href="/user/%s">%s</a>' % (user.id,user.name)
+    return '<a href="/user/%s" class="user">%s</a>' % (user.id,user.name)
         
 def strftime(value, type='normal'):
     if type == 'normal':

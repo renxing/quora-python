@@ -8,13 +8,13 @@
 <script type="text/javascript">
   function toggleAskComments(){
     var ask_comments = $("#ask_{{ask.id}}_comments");
-    ask_comments.toggle();
+    ask_comments.slideToggle(200);
     return false;
   }
 
   function toggleAnswerComments(id){
     var answer_comments = $("#answer_"+id+"_comments");
-    answer_comments.toggle();
+    answer_comments.slideToggle(200);
     return false;
   }
 </script>
@@ -43,11 +43,11 @@
     <div class="md_body">{{ item.body|md_body }}</div>
     <div class="action">
       {% if item.comments|count == 0 %}
-      <a href="#" onclick="return toggleAnswerComments({{ item.id }});">给予评论</a>
+      <a href="#" onclick="return toggleAnswerComments('{{ item.id }}');">给予评论</a>
       {% else %}
-      <a href="#" onclick="return toggleAnswerComments({{ item.key }});">{{ item.comments|count }} 条评论</a>
+      <a href="#" onclick="return toggleAnswerComments('{{ item.key }}');">{{ item.comments|count }} 条评论</a>
       {% endif %}
-      • <a href="#">收藏</a>
+      • <a href="#">有用</a> • <a href="#">没有帮助</a>
     </div>
     {{ comments_render("answer",item,xsrf_form_html) }}
   </div>

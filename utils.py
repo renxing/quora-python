@@ -1,5 +1,5 @@
 # coding: utf-8
-import hashlib
+import hashlib, uuid
 def truncate_lines(body, lines = 4, max_chars = 400):
     if not body: return ""
     body_lines = body.splitlines()
@@ -33,3 +33,6 @@ def format_tags(str):
     tags = filter(lambda tag: len(tag) > 0, tags)
     tags = list(set(tags))
     return tags
+
+def sid():
+    return uuid.uuid1().hex

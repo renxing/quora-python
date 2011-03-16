@@ -49,7 +49,6 @@ body { text-align:center; }
 .ask h1 { font-size: 1.8em; line-height: 1.3em; letter-spacing: -1px; margin-bottom: 0; }
 .ask .title { font-size: 1.3em; line-height: 1.2em; font-weight: bold;}
 .ask .info { color: #999; margin:3px 0;  }
-.ask .action { color:#999; margin:3px 0; }
 .md_body { font-size:1.2em; color: #333; line-height:130%; }
 .md_body blockquote { padding-left:28px; padding-top:8px; background:#FAEBBC url(/static/img/lquote.gif) left top no-repeat; }
 .md_body blockquote p { padding-right:28px; padding-bottom:8px; font-size:1em; background:url(/static/img/rquote.gif) bottom right no-repeat; }
@@ -66,6 +65,14 @@ a.tag { margin:0px 2px; }
 .answers { margin:20px 0; }
 .answers .answer { border-bottom:1px solid #DDD; padding:8px 0; margin-bottom:3px; }
 .answers .answer .info { color: #999; margin:3px 0;  }
+
+.ask .info a.user,
+.answer .info a.user { font-weight:bold; }
+
+.answer .action,
+.ask .action { color:#999; margin:3px 0; }
+.ask .action a,
+.answer .action a { color:#538DC2; }
 
 .comments { margin-top:10px; }
 .comments h2 { font-size:1em; color:#333; }

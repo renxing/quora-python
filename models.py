@@ -10,11 +10,13 @@ class User(Document):
     created_at = DateTimeField(default=datetime.datetime.now)
 
 class Comment(EmbeddedDocument):
+    id = StringField(required=True)
     body = StringField(required=True,min_length=4, max_length=2000)
     user = ReferenceField(User)
     created_at = DateTimeField(default=datetime.datetime.now)
     
 class Answer(EmbeddedDocument):
+    id = StringField(required=True)
     body = StringField()
     user = ReferenceField(User)
     comments = ListField(EmbeddedDocumentField(Comment))
