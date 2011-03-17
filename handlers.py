@@ -121,7 +121,7 @@ class AnswerHandler(BaseHandler):
                         user=self.current_user)
         try:
             answer.save()
-            Ask.objects(id=ask_id).update_one(inc__answers_count=1)
+            Ask.objects(id=ask_id).update_one(inc__answers_count=1,set__replied_at=answer.created_at)
             self.redirect("/ask/%s" % ask_id)
         except Exception,exc:
             self.notice(exc,"error")
