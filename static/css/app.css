@@ -63,16 +63,30 @@ a.page_more:active { background: #E0E0E0; border-color: #999; text-shadow: none;
 a.tag { margin:0px 2px; }
 
 .answers { margin:20px 0; }
+.answers .vote_buttons { float:left; width:20px; position:relative; margin-top:5px; margin-right:8px; margin-left:-27px; }
+.answers .vote_buttons a:link,
+.answers .vote_buttons a:visited {  display:block; width:20px; height:17px;  background: #DFEAF4 url(/static/img/vote.gif); margin-bottom: 1px;
+  -moz-border-radius: 3px; -webkit-border-radius: 3px; }
+.answers .vote_buttons a:hover,
+.answers .vote_buttons a.voted { background-color:#19558D; background-position: -17px left; }
+.answers .vote_buttons a.vote_down:link,
+.answers .vote_buttons a.vote_down:visited { background-position: top -20px; }
+.answers .vote_buttons a.vote_down:hover,
+.answers .vote_buttons a.vote_down.voted { background-color:#19558D; background-position: -20px -17px; }
+
 .answers .answer { border-bottom:1px solid #DDD; padding:8px 0; margin-bottom:3px; }
 .answers .answer .info { color: #999; margin:3px 0;  }
 
 .ask .info a.user,
 .answer .info a.user { font-weight:bold; }
+.answer .votes { color:#999; margin-bottom:4px; }
+.answer .votes a { color:#999; }
 
 .answer .action,
 .ask .action { color:#999; margin:3px 0; }
 .ask .action a,
 .answer .action a { color:#538DC2; }
+.answer .action a.voted { color:#666; }
 
 .comments { margin-top:10px; }
 .comments h2 { font-size:1em; color:#333; }
