@@ -49,6 +49,21 @@
     });
     return false;
   }
+
+  function vote(id,type){
+    var answer = $("#answer_"+id);
+    vtype = "down";
+    if(type == 1) { vtype = "up"; }
+    $.get("/answer/"+id+"/vote",{ up : type },function(s){
+        if(s == "1"){
+          $(".vote_buttons a",answer).removeClass("voted");
+          $(".vote_buttons a.vote_"+vtype,answer).addClass("voted");
+          $(".action a",answer).removeClass("voted");
+          $(".action a.vote_"+vtype,answer).addClass("voted");
+        }
+    });
+    return false;
+  }
 </script>
 {% endblock %}
 {% from "_comments.html" import comments_render %}
@@ -70,18 +85,33 @@
 </div>
 <div class="answers">
   {% for item in answers %}
-  <div class="answer">
-    <div class="info">{{ item.user|user_name_tag }} 回复与 {{ item.created_at|strftime }}</div>
-    <div class="md_body">{{ item.body|md_body }}</div>
-    <div class="action">
-      {% if item.comments|count == 0 %}
-      <a href="#" onclick="return toggleAnswerComments('{{ item.id }}');">给予评论</a>
-      {% else %}
-      <a href="#" onclick="return toggleAnswerComments('{{ item.id }}');">{{ item.comments|count }} 条评论</a>
-      {% endif %}
-      • <a href="#">有用</a> • <a href="#">没有帮助</a>
+  <div id="answer_{{item.id}}" class="answer">
+    <div class="vote_buttons">
+      <a class="vote_up" onclick="return vote('{{ item.id }}',1);" href="#"></a>
+      <a class="vote_down" onclick="return vote('{{ item.id }}',0);" href="#"></a>
     </div>
-    {{ comments_render("answer",item,xsrf_form_html) }}
+    <div class="anser_border">
+      <div class="info">{{ item.user|user_name_tag }} 回复与 {{ item.created_at|strftime }}</div>
+      {% if item.vote > 0 %}
+      <div class="votes">
+        {{ item.vote_users|count }} votes by 
+        {% for u in item.voted_users %}
+        {{ u|user_name_tag }}
+        {% endfor %}
+      </div>
+      {% endif %}
+      <div class="md_body">{{ item.body|md_body }}</div>
+      <div class="action">
+        {% if item.comments|count == 0 %}
+        <a href="#" onclick="return toggleAnswerComments('{{ item.id }}');">给予评论</a>
+        {% else %}
+        <a href="#" onclick="return toggleAnswerComments('{{ item.id }}');">{{ item.comments|count }} 条评论</a>
+        {% endif %}
+        • <a class="vote_up" onclick="return vote('{{ item.id }}',1);" href="#">有用</a> 
+        • <a class="vote_down" onclick="return vote('{{ item.id }}',0);" href="#">没有帮助</a>
+      </div>
+      {{ comments_render("answer",item,xsrf_form_html) }}
+    </div>
   </div>
   {% endfor %}
 </div>

@@ -39,4 +39,10 @@ def strfdate(value,type='normal'):
     else:
         format="%m-%d"
     return value.strftime(format)
+
+# check value is in list
+def inlist(value,list):
+    if list.count(value) > 0:
+        return True
+    return false
     

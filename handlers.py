@@ -112,7 +112,7 @@ class AskHandler(BaseHandler):
 class AskShowHandler(BaseHandler):
     def get(self,id):
         ask = Ask.objects(id=id).first()
-        answers = Answer.objects(ask=ask)
+        answers = Answer.objects(ask=ask).order_by("-vote","created_at")
         if not ask:
             render_404
         self.render("ask_show.html",ask=ask, answers=answers)
@@ -141,7 +141,20 @@ class AnswerHandler(BaseHandler):
             self.notice(exc,"error")
             frm.render("ask_show.html", ask=ask)
 
+class AnswerVoteHandler(BaseHandler):
+    def get(self, id):
+        vote = 1
+        if self.get_argument("up","0") == "0":
+            vote = -1
+        answer = Answer.objects(id=id)
+        if not answer.first().voted_users.count(self.current_user):
+            answer.update_one(inc__vote=vote,push__voted_users=self.current_user)
+            self.write("1")
+        else:
+            self.write("0")
+
 class LogoutHandler(BaseHandler):
+    @tornado.web.authenticated
     def get(self):
         self.set_secure_cookie("user_id","")
         self.redirect("/login")
@@ -194,6 +207,7 @@ class FeedHandler(BaseHandler):
 
 
 class CommentHandler(BaseHandler):
+    @tornado.web.authenticated
     def post(self, commentable_type, commentable_id):
         commentable_type = commentable_type.lower()
         if ["ask","answer"].count(commentable_type) == 0: return ""

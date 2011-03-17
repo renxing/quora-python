@@ -33,6 +33,7 @@ class Application(tornado.web.Application):
             (r"/feed", FeedHandler),
             (r"/ask/([^/]+)/answer", AnswerHandler),
             (r"/ask", AskHandler),
+            (r"/answer/([^/]+)/vote", AnswerVoteHandler),
             (r"/comment/([^/]+)/([^/]+)", CommentHandler),
         ]
         settings = dict(

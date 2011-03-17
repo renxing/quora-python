@@ -23,6 +23,7 @@ class Ask(Document):
     tags = ListField(StringField(max_length=30))
     comments = ListField(EmbeddedDocumentField(Comment))
     answers_count = IntField(required=True,default=0)
+    flagged_users = ListField(ReferenceField(User))
     created_at = DateTimeField(default=datetime.datetime.now)
     replied_at = DateTimeField(default=datetime.datetime.now)
 
@@ -31,5 +32,7 @@ class Answer(Document):
     body = StringField()
     user = ReferenceField(User)
     comments = ListField(EmbeddedDocumentField(Comment))
+    vote = IntField(required=True,default=0)
+    voted_users = ListField(ReferenceField(User))
     created_at = DateTimeField(default=datetime.datetime.now)
 
