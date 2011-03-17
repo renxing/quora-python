@@ -19,7 +19,7 @@ class BaseForm(formencode.Schema):
     def __init__(self, handler, form_id = None):
 
         self._parmas = {}
-        self.values = {}
+        self._values = {}
         self._form_errors = {}
         self.form_id = form_id
         arguments = {}
@@ -45,13 +45,17 @@ class BaseForm(formencode.Schema):
 
     def validate(self):
         try:
-            self.values = self.to_python(self._parmas)
+            self._values = self.to_python(self._parmas)
             self._result = True
             self.__after__()
         except formencode.Invalid, error:
-            self.values = error.value
+            self._values = error.value
             self._form_errors = error.error_dict or {}
             self._result = False
+
+        # map values to define form propertys and decode utf8
+        for k in self._values.keys():
+            exec("self.%s = self._values[\"%s\"].decode('utf8')" % (k,k)) 
 
         return self._result
 
@@ -65,8 +69,9 @@ class BaseForm(formencode.Schema):
 
         if not self._result:
             html = htmlfill.render(html,
-                                   defaults=self.values,
-                                   errors=self._form_errors)
+                                   defaults=self._values,
+                                   errors=self._form_errors,
+                                   encoding="utf8")
 
         self._handler.finish(html)
 

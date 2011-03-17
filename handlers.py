@@ -95,11 +95,11 @@ class AskHandler(BaseHandler):
             frm.render("ask.html")
             return
 
-        ask = Ask(title=frm.values['title'],
-            body = frm.values['body'],
-            summary = utils.truncate_lines(frm.values["body"],3,500),
+        ask = Ask(title=frm.title,
+            body = frm.body,
+            summary = utils.truncate_lines(frm.body,3,500),
             user = self.current_user,
-            tags = utils.format_tags(frm.values['tags']))
+            tags = utils.format_tags(frm.tags))
         try:
           ask.save()
           self.redirect("/ask/%s" % ask.id)
@@ -131,7 +131,7 @@ class AnswerHandler(BaseHandler):
             return
 
         answer = Answer(ask=ask,
-                        body=frm.values['answer_body'],
+                        body=frm.answer_body,
                         user=self.current_user)
         try:
             answer.save()
@@ -156,8 +156,8 @@ class LoginHandler(BaseHandler):
             frm.render("login.html")
             return
 
-        password = utils.md5(frm.values['password'])
-        user = User.objects(email=frm.values['email'],
+        password = utils.md5(frm.password)
+        user = User.objects(email=frm.email,
                             password=password).first()
         if not user:
             frm.add_error("password", "不正确")
@@ -177,9 +177,9 @@ class RegisterHandler(BaseHandler):
             frm.render("register.html")
             return
         
-        user = User(name=frm.values['name'],
-                    email=frm.values['email'],
-                    password=utils.md5(frm.values['password']))
+        user = User(name=frm.name,
+                    email=frm.email,
+                    password=utils.md5(frm.password))
         try:
           user.save()
           self.set_secure_cookie("user_id",str(user.id))
