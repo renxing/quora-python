@@ -88,24 +88,24 @@
 <div class="ask from">
   <h2>回答</h2>
   {{ notice_message }}
-  <form action="/ask/{{ ask.id }}/answer" method="post">
+  <form action="/ask/{{ ask.id }}/answer" id="answer_form" method="post">
     <div class="row">
+      {{ xsrf_form_html() }}
       <div id="answer_body_buttons"></div>
-      <textarea id="answer_body" name="body" style="height:100px;" class="text long"></textarea><br />
+      <textarea id="answer_body" name="answer_body" style="height:100px;" class="text long"></textarea><br />
       <div id="answer_body_preview" class="md_body"></div>
-      <script type="text/javascript">
-        setup_wmd({
-          input: "answer_body",
-          button_bar: "answer_body_buttons",
-          preview: "answer_body_preview",
-          output: "copy_html"
-        });
-      </script>
     </div>
     <div class="actions">
       <button type="submit">提交回答</button>
     </div>
-    {{ xsrf_form_html() }}
   </form>
+  <script type="text/javascript">
+    setup_wmd({
+      input: "answer_body",
+      button_bar: "answer_body_buttons",
+      preview: "answer_body_preview",
+      output: "copy_html"
+    });
+  </script>
 </div>
 {% endblock %}

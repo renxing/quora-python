@@ -90,17 +90,22 @@ class AskHandler(BaseHandler):
 
     @tornado.web.authenticated
     def post(self):
-        ask = Ask(title=self.get_argument("title",None),
-            body = self.get_argument("body",''),
-            summary = utils.truncate_lines(self.get_argument("body",''),3,500),
+        frm = AskForm(self)
+        if not frm.validate():
+            frm.render("ask.html")
+            return
+
+        ask = Ask(title=frm.values['title'],
+            body = frm.values['body'],
+            summary = utils.truncate_lines(frm.values["body"],3,500),
             user = self.current_user,
-            tags = utils.format_tags(self.get_argument("tags",'')))
+            tags = utils.format_tags(frm.values['tags']))
         try:
           ask.save()
           self.redirect("/ask/%s" % ask.id)
         except Exception,exc:
           self.notice(exc,"error")
-          self.render("ask.html",ask=ask)
+          frm.render("ask.html")
 
 
         
@@ -120,8 +125,13 @@ class AnswerHandler(BaseHandler):
     @tornado.web.authenticated
     def post(self,ask_id):
         ask = Ask.objects(id=ask_id).first()
+        frm = AnswerForm(self)
+        if not frm.validate():
+            frm.render("ask_show.html",ask=ask)
+            return
+
         answer = Answer(ask=ask,
-                        body=self.get_argument("body",None),
+                        body=frm.values['answer_body'],
                         user=self.current_user)
         try:
             answer.save()
@@ -129,7 +139,7 @@ class AnswerHandler(BaseHandler):
             self.redirect("/ask/%s" % ask_id)
         except Exception,exc:
             self.notice(exc,"error")
-            self.render("ask_show.html",ask=ask)
+            frm.render("ask_show.html", ask=ask)
 
 class LogoutHandler(BaseHandler):
     def get(self):
@@ -144,6 +154,7 @@ class LoginHandler(BaseHandler):
         frm = LoginForm(self)
         if not frm.validate():
             frm.render("login.html")
+            return
 
         password = utils.md5(frm.values['password'])
         user = User.objects(email=frm.values['email'],
@@ -164,6 +175,7 @@ class RegisterHandler(BaseHandler):
         frm = RegisterForm(self)
         if not frm.validate():
             frm.render("register.html")
+            return
         
         user = User(name=frm.values['name'],
                     email=frm.values['email'],

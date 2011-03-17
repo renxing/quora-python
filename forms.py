@@ -16,11 +16,12 @@ class BaseForm(formencode.Schema):
 
     _xsrf = validators.PlainText(not_empty=True, max=32)
 
-    def __init__(self, handler):
+    def __init__(self, handler, form_id = None):
 
         self._parmas = {}
         self.values = {}
         self._form_errors = {}
+        self.form_id = form_id
         arguments = {}
 
         # re-parse qs, keep_blankvalues for formencode to validate
@@ -33,14 +34,12 @@ class BaseForm(formencode.Schema):
                 arguments = urlparse.parse_qs(request.body, keep_blank_values=1)
 
         for k, v in arguments.iteritems():
-            logging.info("****** %s : %s" % (k,v))
             if len(v) == 1:
                 self._parmas[k] = v[0]
             else:
                 # keep a list of values as list (or set)
                 self._parmas[k] = v
 
-        logging.info("*** %s" % self._parmas)
         self._handler = handler
         self._result = True
 
@@ -63,16 +62,19 @@ class BaseForm(formencode.Schema):
 
     def render(self, template_name, **kwargs):
         html = self._handler.render_string(template_name, **kwargs)
+
         if not self._result:
             html = htmlfill.render(html,
                                    defaults=self.values,
-                                   errors=self._form_errors,
-                                   encoding="utf8")
+                                   errors=self._form_errors)
+
         self._handler.finish(html)
 
     # post process hook
     def __after__(self):
         pass
+
+
 
 
 
@@ -87,3 +89,12 @@ class RegisterForm(BaseForm):
     password_confirm = validators.String(not_empty=True)
     chained_validators = [validators.FieldsMatch('password', 'password_confirm')]
     
+class AskForm(BaseForm):
+    title = validators.String(not_empty=True,min=5,max=255,strip=True)
+    body = validators.String()
+    tags = validators.String(strip=True)
+
+class AnswerForm(BaseForm):
+    answer_body = validators.String(not_empty=True,min=2,strip=True)
+
+

@@ -12,12 +12,12 @@
   <form action="/ask" method="post">
     <div class="row">
       <label>标题</label><br />
-      <input type="text" class="text long" name="title" value="{{ ask.title|e }}" />
+      <input type="text" class="text long" name="title" value="" />
     </div>
     <div class="row">
       <label>描述</label><br />
       <div id="ask_body_buttons"></div>
-      <textarea id="ask_body" name="body" class="text long">{{ ask.body|e }}</textarea><br />
+      <textarea id="ask_body" name="body" class="text long"></textarea><br />
       <div id="ask_body_preview" class="md_body"></div>
       <script type="text/javascript">
         setup_wmd({
@@ -30,7 +30,7 @@
     </div>
     <div class="row">
       <label>标签</label><br />
-      <input type="text" class="text long" name="tags" value="{{ ask.tags|e }}" />
+      <input type="text" class="text long" name="tags" value="" />
     </div>
     <div class="actions">
       <button type="submit">提交问题</button>
