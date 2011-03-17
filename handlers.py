@@ -6,6 +6,7 @@ from jinja2 import Template, Environment, FileSystemLoader
 from pymongo.objectid import ObjectId
 
 import filter, utils, session
+from forms import *
 from models import *
 
 class BaseHandler(tornado.web.RequestHandler):
@@ -14,7 +15,7 @@ class BaseHandler(tornado.web.RequestHandler):
         tornado.web.RequestHandler.__init__(self, application, request, **kwargs)
         self.session = session.TornadoSession(application.session_manager, self)
 
-    def render(self,template,**args):
+    def render_string(self,template,**args):
         env = Environment(loader=FileSystemLoader(self.settings['template_path']))
         env.filters['markdown'] = filter.markdown
         env.filters['md_body'] = filter.md_body
@@ -24,13 +25,16 @@ class BaseHandler(tornado.web.RequestHandler):
         env.filters['strfdate'] = filter.strfdate
         env.filters['truncate_lines'] = utils.truncate_lines
         template = env.get_template(template)
-        self.finish(template.render(settings=self.settings,
-                        notice_message=self.notice_message,
-                        current_user=self.current_user,
-                        static_url=self.static_url,
-                        modules=self.ui['modules'],
-                        xsrf_form_html=self.xsrf_form_html,
-                        **args))
+        return template.render(settings=self.settings,
+                               notice_message=self.notice_message,
+                               current_user=self.current_user,
+                               static_url=self.static_url,
+                               modules=self.ui['modules'],
+                               xsrf_form_html=self.xsrf_form_html,
+                               **args)
+
+    def render(self, template, **args):
+        self.finish(self.render_string(template, **args))
 
     def get_current_user(self):
         user_id = self.get_secure_cookie("user_id")
@@ -137,15 +141,19 @@ class LoginHandler(BaseHandler):
         self.render("login.html")
 
     def post(self):
-        email = self.get_argument("email",None)
-        password = utils.md5(self.get_argument("password",""))
-        user = User.objects(email=email,password=password).first()
+        frm = LoginForm(self)
+        if not frm.validate():
+            frm.render("login.html")
+
+        password = utils.md5(frm.values['password'])
+        user = User.objects(email=frm.values['email'],
+                            password=password).first()
         if not user:
-            self.notice("Email or Password error.",'error')
-            self.render("login.html")
-        else:
-            self.set_secure_cookie("user_id", str(user.id))
-            self.redirect(self.get_argument("next","/"))
+            frm.add_error("password", "不正确")
+            frm.render("login.html")
+
+        self.set_secure_cookie("user_id", str(user.id))
+        self.redirect(self.get_argument("next","/"))
 
 class RegisterHandler(BaseHandler):
     def get(self):
