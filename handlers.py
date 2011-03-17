@@ -161,16 +161,20 @@ class RegisterHandler(BaseHandler):
         self.render("register.html", user=user)
 
     def post(self):
-        user = User(name=self.get_argument("name",None),
-            email=self.get_argument("email",None),
-            password=utils.md5(self.get_argument("password","")))
+        frm = RegisterForm(self)
+        if not frm.validate():
+            frm.render("register.html")
+        
+        user = User(name=frm.values['name'],
+                    email=frm.values['email'],
+                    password=utils.md5(frm.values['password']))
         try:
           user.save()
           self.set_secure_cookie("user_id",str(user.id))
           self.redirect("/")
         except Exception,exc:
           self.notice(exc,"error")
-          self.render("register.html",user=user)
+          frm.render("register.html")
 
 class FeedHandler(BaseHandler):
     def get(self):

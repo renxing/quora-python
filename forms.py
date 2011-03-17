@@ -1,3 +1,4 @@
+# coding: utf-8
 import re
 import logging  
 import urlparse
@@ -79,3 +80,10 @@ class LoginForm(BaseForm):
     email = validators.Email(not_empty=True,strip=True)
     password = validators.String(not_empty=True)
 
+class RegisterForm(BaseForm):
+    email = validators.Email(not_empty=True,strip=True)
+    name = validators.String(not_empty=True,strip=True)
+    password = validators.String(not_empty=True)
+    password_confirm = validators.String(not_empty=True)
+    chained_validators = [validators.FieldsMatch('password', 'password_confirm')]
+    
