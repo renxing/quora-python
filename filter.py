@@ -2,6 +2,7 @@
 import re
 import markdown as Markdown
 from jinja2.utils import urlize, escape
+import urllib, hashlib
 
 def markdown(value):
     return Markdown.markdown(value)
@@ -20,7 +21,7 @@ def tags_name_tag(tags,limit = 0):
     return ",".join(html)
 
 def user_name_tag(user):
-    return '<a href="/user/%s" class="user">%s</a>' % (user.id,user.name)
+    return '<a href="/%s" class="user">%s</a>' % (user.login,user.name)
         
 def strftime(value, type='normal'):
     if type == 'normal':
@@ -45,4 +46,10 @@ def inlist(value,list):
     if list.count(value) > 0:
         return True
     return false
+
+def avatar(user, size = 40):
+    gravatar_url = "http://www.gravatar.com/avatar/" + hashlib.md5(user.email).hexdigest() +  "?" 
+    gravatar_url += urllib.urlencode({'s':str(size)})
+    return "<a href=\"/%s\" class=\"avatar\"><img src=\"%s\" style=\"width:%dpx;\" title=\"%s\" /></a>" % (user.login,gravatar_url,size,user.name)
+
     

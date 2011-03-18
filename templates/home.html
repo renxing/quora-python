@@ -20,6 +20,9 @@
 
 {% block sidebar %}
 <div class="box">
+  {{ current_user|avatar(120) }}
+</div>
+<div class="box">
   <ul>
     <li><a href="/">Your feed</a></li>
   </ul>

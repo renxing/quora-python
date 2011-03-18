@@ -84,15 +84,22 @@ class BaseForm(formencode.Schema):
 
 
 class LoginForm(BaseForm):
-    email = validators.Email(not_empty=True,strip=True)
+    login = validators.String(not_empty=True,strip=True)
     password = validators.String(not_empty=True)
 
 class RegisterForm(BaseForm):
+    login = validators.String(not_empty=True,strip=True,min=4,max=20)
     email = validators.Email(not_empty=True,strip=True)
     name = validators.String(not_empty=True,strip=True)
     password = validators.String(not_empty=True)
     password_confirm = validators.String(not_empty=True)
     chained_validators = [validators.FieldsMatch('password', 'password_confirm')]
+
+class SettingsForm(BaseForm):
+    email = validators.Email(not_empty=True,strip=True)
+    name = validators.String(not_empty=True,strip=True)
+    blog = validators.URL(not_empty=True,strip=True)
+    bio = validators.String(not_empty=True,max=300)
     
 class AskForm(BaseForm):
     title = validators.String(not_empty=True,min=5,max=255,strip=True)

@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block body %}
+<h1>个人设置</h2>
+<div id="settings" class="form">
+  {{ notice_message }}
+  <form action="" method="post">
+    <div class="row">
+      <label>姓名</label><br />
+      <input type="text" name="name" value="{{ current_user.name }}" />
+    </div>
+    <div class="row">
+      <label>Email</label><br />
+      <input type="text" name="email" value="{{ current_user.email }}" />
+    </div>
+    <div class="row">
+      <label>个人主页</label><br />
+      <input type="text" class="text long" name="blog" value="{{ current_user.blog|default("http://",true) }}" />
+    </div>
+    <div class="row">
+      <label>个人介绍</label><br />
+      <textarea class="text long" name="bio">{{ current_user.bio|default("",true) }}</textarea>
+    </div>
+    <div class="row">
+      <button type="submit">保存</button>
+    </div>
+    {{ xsrf_form_html() }}
+  </form>
+</div>
+{% endblock %}

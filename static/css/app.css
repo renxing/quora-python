@@ -38,12 +38,13 @@ body { text-align:center; }
 #main { margin:20px 0; }
 .left_wrapper { float:left; width:870px; }
 #footer .left_wrapper ,
-#main .left_wrapper { margin-left:70px; width:800px; }
+#main .left_wrapper { margin-left:70px; margin-right:20px; width:780px; }
 .sidebar { float:right: width:450px; }
 
 .form { }
 .form .row { margin:5px 0; }
 .form .row label { font-size: 12px; color:#666; }
+.form span.error-message { color:red; }
 
 .ask { margin-bottom:15px; border-bottom:1px solid #ddd; padding-bottom:10px; }
 .ask h1 { font-size: 1.8em; line-height: 1.3em; letter-spacing: -1px; margin-bottom: 0; }
@@ -73,6 +74,8 @@ a.tag { margin:0px 2px; }
 .answers .vote_buttons a.vote_down:visited { background-position: top -20px; }
 .answers .vote_buttons a.vote_down:hover,
 .answers .vote_buttons a.vote_down.voted { background-color:#19558D; background-position: -20px -17px; }
+.answers .answer_border { padding-right:30px; }
+.answers .avatar_border { margin-top:2px; float:right; width:24px; margin-left:6px; }
 
 .answers .answer { border-bottom:1px solid #DDD; padding:8px 0; margin-bottom:3px; }
 .answers .answer .info { color: #999; margin:3px 0;  }
@@ -87,6 +90,7 @@ a.tag { margin:0px 2px; }
 .ask .action a,
 .answer .action a { color:#538DC2; }
 .answer .action a.voted { color:#666; }
+.ask .action a.flagged { color:#999; }
 
 .comments { margin-top:10px; }
 .comments h2 { font-size:1em; color:#333; }
@@ -97,3 +101,7 @@ a.tag { margin:0px 2px; }
 .comments .form textarea { float:left; height: 30px; width:300px; margin-right:6px;  }
 
 #login { margin: 20px 0; }
+
+
+.user_profile {}
+.user_profile .bio { margin-top:10px; }

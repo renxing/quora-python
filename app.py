@@ -32,9 +32,12 @@ class Application(tornado.web.Application):
             (r"/ask/([^/]+)", AskShowHandler),
             (r"/feed", FeedHandler),
             (r"/ask/([^/]+)/answer", AnswerHandler),
+            (r"/ask/([^/]+)/flag", FlagAskHandler),
             (r"/ask", AskHandler),
             (r"/answer/([^/]+)/vote", AnswerVoteHandler),
-            (r"/comment/([^/]+)/([^/]+)", CommentHandler),
+            (r"/ask", AskHandler),
+            (r"/settings", SettingsHandler),
+            (r"/([^/]+)", ProfileHandler),
         ]
         settings = dict(
             app_name=u"Quora",

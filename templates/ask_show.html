@@ -8,13 +8,13 @@
 <script type="text/javascript">
   function toggleAskComments(){
     var ask_comments = $("#ask_{{ask.id}}_comments");
-    ask_comments.slideToggle(200);
+    ask_comments.toggle();
     return false;
   }
 
   function toggleAnswerComments(id){
     var answer_comments = $("#answer_"+id+"_comments");
-    answer_comments.slideToggle(200);
+    answer_comments.toggle();
     return false;
   }
 
@@ -54,13 +54,26 @@
     var answer = $("#answer_"+id);
     vtype = "down";
     if(type == 1) { vtype = "up"; }
+    $(".vote_buttons a",answer).removeClass("voted");
+    $(".vote_buttons a.vote_"+vtype,answer).addClass("voted");
+    $(".action a",answer).removeClass("voted");
+    $(".action a.vote_"+vtype,answer).addClass("voted");
     $.get("/answer/"+id+"/vote",{ up : type },function(s){
-        if(s == "1"){
-          $(".vote_buttons a",answer).removeClass("voted");
-          $(".vote_buttons a.vote_"+vtype,answer).addClass("voted");
-          $(".action a",answer).removeClass("voted");
-          $(".action a.vote_"+vtype,answer).addClass("voted");
-        }
+    });
+    return false;
+  }
+
+  function flag(el){
+    a_flag = $(".ask a.flag");
+    if(a_flag.text() == "收藏"){
+      f = 1;
+      a_flag.addClass("flagged").text("已收藏");
+    }
+    else{
+      f = 0;
+      a_flag.removeClass("flagged").text("收藏");
+    }
+    $.get("/ask/{{ ask.id }}/flag",{flag:f},function(s){
     });
     return false;
   }
@@ -71,7 +84,7 @@
 <div class="ask">
   <h1>{{ ask.title|e }}</h1>
   <div class="info">{{ ask.user|user_name_tag }} 发布关于 {{ ask.tags|tags_name_tag }} 的问题于 
-    {{ ask.created_at|strftime }}, {{ ask.answers|count }} 个回答</div>
+    {{ ask.created_at|strftime }}, {{ ask.answers_count }} 个回答</div>
   <div class="md_body">{{ ask.body|md_body }}</div>
   <div class="action">
     {% if ask.comments|count == 0 %}
@@ -79,7 +92,11 @@
     {% else %}
     <a href="#" onclick="return toggleAskComments();">{{ ask.comments|count }} 条评论</a>
     {% endif %}
-    • <a href="#">收藏</a>
+    • {% if ask.flagged_users.count(current_user) == 0 %}
+    <a href="#" class="flag" onclick="return flag(this);">收藏</a>
+    {% else %}
+    <a href="#" class="flag flagged" onclick="return flag(this);">已收藏</a>
+    {% endif %}
   </div>
   {{ comments_render("ask",ask,xsrf_form_html) }}
 </div>
@@ -90,16 +107,19 @@
       <a class="vote_up" onclick="return vote('{{ item.id }}',1);" href="#"></a>
       <a class="vote_down" onclick="return vote('{{ item.id }}',0);" href="#"></a>
     </div>
-    <div class="anser_border">
-      <div class="info">{{ item.user|user_name_tag }} 回复与 {{ item.created_at|strftime }}</div>
-      {% if item.vote > 0 %}
+    <div class="avatar_border">
+      {{ item.user|avatar(24) }}
+    </div>
+    <div class="answer_border">
+      <div class="info">{{ item.user|user_name_tag }}</div>
       <div class="votes">
-        {{ item.vote_users|count }} votes by 
-        {% for u in item.voted_users %}
-        {{ u|user_name_tag }}
-        {% endfor %}
+        {% if item.vote > 0 %}
+          {{ item.vote }} 人有用, 
+        {% elif item.vote < 0 %}
+          {{ item.vote|abs }} 人觉得没有帮助, 
+        {% endif %}
+        {{ item.created_at|strftime }}
       </div>
-      {% endif %}
       <div class="md_body">{{ item.body|md_body }}</div>
       <div class="action">
         {% if item.comments|count == 0 %}

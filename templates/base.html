@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
-  <title>{{ settings['app_name'] }}</title>
+  <title>{{ title }}</title>
   <link rel="stylesheet" href="{{ static_url("css/app.css") }}" type="text/css" />
    {% block styles %}{% endblock %} 
    <script type="text/javascript" src="{{ static_url("js/jquery.js") }}"></script>
@@ -27,7 +27,8 @@
           <a href="/login">登陆</a>
           <a href="/register">注册</a>
           {% else %}
-          <a href="/{{ current_user.id }}">{{ current_user.name }}</a>
+          {{ current_user|user_name_tag }}
+          <a href="/settings">个人设置</a>
           <a href="/logout">退出</a>
           {% endif %}
         </div>

@@ -14,6 +14,7 @@ class BaseHandler(tornado.web.RequestHandler):
     def __init__(self, application, request, **kwargs):
         tornado.web.RequestHandler.__init__(self, application, request, **kwargs)
         self.session = session.TornadoSession(application.session_manager, self)
+        self._title = self.settings['app_name']
 
     def render_string(self,template,**args):
         env = Environment(loader=FileSystemLoader(self.settings['template_path']))
@@ -23,9 +24,11 @@ class BaseHandler(tornado.web.RequestHandler):
         env.filters['user_name_tag'] = filter.user_name_tag
         env.filters['strftime'] = filter.strftime
         env.filters['strfdate'] = filter.strfdate
+        env.filters['avatar'] = filter.avatar
         env.filters['truncate_lines'] = utils.truncate_lines
         template = env.get_template(template)
         return template.render(settings=self.settings,
+                               title=self._title,
                                notice_message=self.notice_message,
                                current_user=self.current_user,
                                static_url=self.static_url,
@@ -69,6 +72,9 @@ class BaseHandler(tornado.web.RequestHandler):
     def render_404(self):
         raise tornado.web.HTTPError(404)
 
+    def set_title(self, str):
+        self._title = u"%s - %s" % (str,self.settings['app_name'])
+
 class HomeHandler(BaseHandler):
     def get(self):
         last_id = self.get_argument("last", None)
@@ -86,10 +92,12 @@ class AskHandler(BaseHandler):
     @tornado.web.authenticated
     def get(self):
         ask = Ask()
+        self.set_title(u"提问题")
         self.render("ask.html",ask=ask)
 
     @tornado.web.authenticated
     def post(self):
+        self.set_title(u"提问题")
         frm = AskForm(self)
         if not frm.validate():
             frm.render("ask.html")
@@ -112,9 +120,10 @@ class AskHandler(BaseHandler):
 class AskShowHandler(BaseHandler):
     def get(self,id):
         ask = Ask.objects(id=id).first()
-        answers = Answer.objects(ask=ask).order_by("-vote","created_at")
         if not ask:
             render_404
+        answers = Answer.objects(ask=ask).order_by("-vote","created_at")
+        self.set_title(ask.title)
         self.render("ask_show.html",ask=ask, answers=answers)
 
 
@@ -125,6 +134,7 @@ class AnswerHandler(BaseHandler):
     @tornado.web.authenticated
     def post(self,ask_id):
         ask = Ask.objects(id=ask_id).first()
+        self.set_title(u"回答")
         frm = AnswerForm(self)
         if not frm.validate():
             frm.render("ask_show.html",ask=ask)
@@ -143,15 +153,11 @@ class AnswerHandler(BaseHandler):
 
 class AnswerVoteHandler(BaseHandler):
     def get(self, id):
-        vote = 1
+        up = True
         if self.get_argument("up","0") == "0":
-            vote = -1
-        answer = Answer.objects(id=id)
-        if not answer.first().voted_users.count(self.current_user):
-            answer.update_one(inc__vote=vote,push__voted_users=self.current_user)
-            self.write("1")
-        else:
-            self.write("0")
+            up = False
+        result = Answer.do_vote(id, up, self.current_user)
+        self.write(str(result))
 
 class LogoutHandler(BaseHandler):
     @tornado.web.authenticated
@@ -161,16 +167,18 @@ class LogoutHandler(BaseHandler):
 
 class LoginHandler(BaseHandler):
     def get(self):
+        self.set_title(u"登陆")
         self.render("login.html")
 
     def post(self):
+        self.set_title(u"登陆")
         frm = LoginForm(self)
         if not frm.validate():
             frm.render("login.html")
             return
 
         password = utils.md5(frm.password)
-        user = User.objects(email=frm.email,
+        user = User.objects(login=frm.login,
                             password=password).first()
         if not user:
             frm.add_error("password", "不正确")
@@ -181,16 +189,19 @@ class LoginHandler(BaseHandler):
 
 class RegisterHandler(BaseHandler):
     def get(self):
+        self.set_title(u"注册")
         user = User()
         self.render("register.html", user=user)
 
     def post(self):
+        self.set_title(u"注册")
         frm = RegisterForm(self)
         if not frm.validate():
             frm.render("register.html")
             return
         
         user = User(name=frm.name,
+                    login=frm.login,
                     email=frm.email,
                     password=utils.md5(frm.password))
         try:
@@ -223,3 +234,51 @@ class CommentHandler(BaseHandler):
                 "name":self.current_user.name }
         self.write(tornado.escape.json_encode(comment_hash))
 
+class FlagAskHandler(BaseHandler):
+    @tornado.web.authenticated
+    def get(self, id):
+        ask = Ask.objects(id=id)
+        flag = self.get_argument("flag","1")
+        if not ask: 
+            self.write("0")
+            return
+
+        if flag == "1":
+            if ask.first().flagged_users.count(self.current_user):
+                self.write("-1")
+                return
+            ask.update_one(push__flagged_users=self.current_user)
+        else:
+            ask.update_one(pull__flagged_users=self.current_user)
+
+class ProfileHandler(BaseHandler):
+    def get(self, login):
+        user = User.objects(login=login).first()
+        if not user: 
+            self.render_404
+            return
+        self.set_title(user.name)
+        self.render("profile.html",user=user)
+
+
+class SettingsHandler(BaseHandler):
+    @tornado.web.authenticated
+    def get(self):
+        self.set_title(u"设置")
+        self.render("settings.html")
+
+    @tornado.web.authenticated
+    def post(self):
+        self.set_title(u"设置")
+        frm = SettingsForm(self)
+        if not frm.validate():
+            frm.render("settings.html")
+            return
+
+        User.objects(id=self.current_user.id).update_one(set__name=frm.name,
+                                                         set__email=frm.email,
+                                                         set__blog=frm.blog,
+                                                         set__bio=frm.bio)
+        self.notice("保存成功", 'success')
+        self.redirect("/settings")
+        

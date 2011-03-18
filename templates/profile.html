@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block body %}
+<div class="user_profile">
+<h1>{{ user.name }}</h1>
+<div class="info">
+  注册于 {{ user.created_at|strftime }}
+</div>
+{% if user.blog %}
+<a href="{{ user.blog }}" rel="nofollow" target="_blank">{{ user.blog|urlize }}</a>
+{% endif %}
+<div class="bio md_body">
+  {% if user.bio %}
+  {{ user.bio|md_body }}
+  {% endif %}
+</div>
+</div>
+{% endblock %}
+{% block sidebar %}
+<div class="box">
+  {{ current_user|avatar(120) }}
+</div>
+{% endblock %}
+
