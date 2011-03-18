@@ -35,12 +35,13 @@ class Application(tornado.web.Application):
             (r"/ask/([^/]+)/flag", FlagAskHandler),
             (r"/ask", AskHandler),
             (r"/answer/([^/]+)/vote", AnswerVoteHandler),
+            (r"/comment/([^/]+)/([^/]+)", CommentHandler),
             (r"/ask", AskHandler),
             (r"/settings", SettingsHandler),
             (r"/([^/]+)", ProfileHandler),
         ]
         settings = dict(
-            app_name=u"Quora",
+            app_name=u"我知",
             template_path=os.path.join(os.path.dirname(__file__), "templates"),
             static_path=os.path.join(os.path.dirname(__file__), "static"),
             xsrf_cookies=True,
