@@ -76,6 +76,7 @@ class BaseHandler(tornado.web.RequestHandler):
         self._title = u"%s - %s" % (str,self.settings['app_name'])
 
 class HomeHandler(BaseHandler):
+    @tornado.web.authenticated
     def get(self):
         last_id = self.get_argument("last", None)
         if not last_id:
@@ -118,6 +119,7 @@ class AskHandler(BaseHandler):
 
         
 class AskShowHandler(BaseHandler):
+    @tornado.web.authenticated
     def get(self,id):
         ask = Ask.objects(id=id).first()
         if not ask:
@@ -128,6 +130,7 @@ class AskShowHandler(BaseHandler):
 
 
 class AnswerHandler(BaseHandler):
+    @tornado.web.authenticated
     def get(self,ask_id):
         self.redirect("/ask/%s" % ask_id)
 
@@ -152,6 +155,7 @@ class AnswerHandler(BaseHandler):
             frm.render("ask_show.html", ask=ask)
 
 class AnswerVoteHandler(BaseHandler):
+    @tornado.web.authenticated
     def get(self, id):
         up = True
         if self.get_argument("up","0") == "0":
